@@ -1,0 +1,327 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #000;
+  color: #eee;
+  isolation: isolate;
+}
+
+.scene-video,
+.scene-loop-bridge {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
+  pointer-events: none;
+}
+
+.scene-loop-bridge {
+  opacity: 0;
+  will-change: opacity;
+}
+
+.scene-shade {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.15), transparent 40%, rgba(0, 0, 0, 0.4)),
+    radial-gradient(ellipse at 50% 42%, transparent 20%, rgba(0, 0, 0, 0.48) 100%);
+}
+
+#letter-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.62;
+}
+
+.page-center {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 24px;
+  perspective: 1200px;
+}
+
+.glass-stage {
+  width: min(100%, 900px);
+  perspective: 1200px;
+}
+
+.glass-panel {
+  --light-x: 50%;
+  --light-y: 30%;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --light-strength: 0;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: min(400px, 70svh);
+  padding: clamp(24px, 5vw, 48px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.2));
+  background-color: rgba(8, 8, 8, 0.18);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  box-shadow:
+    0 28px 80px -18px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  color: #fff;
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  animation: glass-enter 900ms ease-out both;
+}
+
+.glass-light {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--light-strength);
+  will-change: opacity;
+}
+
+.glass-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.075), transparent 70%);
+  transform: translate3d(calc(var(--light-x) - 50%), calc(var(--light-y) - 50%), 0);
+  will-change: transform;
+}
+
+.glass-panel::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.glass-panel::after {
+  top: -1px;
+  left: 20%;
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  box-shadow: 0 0 18px 2px rgba(255, 255, 255, 0.07);
+  animation: edge-glow 5s ease-in-out infinite;
+}
+
+@keyframes glass-enter {
+  from { opacity: 0; translate: 0 16px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes edge-glow {
+  0%, 100% { opacity: 0.4; scale: 0.8 1; }
+  50% { opacity: 0.95; scale: 1 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-panel,
+  .glass-panel::after {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+}
+
+.music-control {
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left));
+  top: max(16px, env(safe-area-inset-top));
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: calc(100vw - 40px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.5);
+  opacity: 0.35;
+  transition: opacity 250ms ease, border-color 250ms ease;
+  color: #ccc;
+  font-size: 12px;
+}
+
+#music-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: #eee;
+  cursor: pointer;
+}
+
+.music-control:hover,
+.music-control:focus-within { opacity: 1; border-color: rgba(255, 255, 255, 0.3); }
+#music-toggle:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 50%; }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.music-meter { --level: 0; display: flex; align-items: center; gap: 3px; height: 22px; }
+.music-meter i {
+  display: block;
+  width: 2px;
+  height: 16px;
+  border-radius: 2px;
+  background: #ddd;
+  transform: scaleY(calc(0.2 + var(--level) * 0.8));
+  transition: transform 100ms linear;
+}
+.music-meter i:nth-child(2) { height: 22px; }
+.music-meter i:nth-child(3) { height: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  .music-meter i { transform: scaleY(0.3); transition: none; }
+}
+
+.profile-carousel { position: relative; width: 100%; }
+.carousel-viewport { overflow: hidden; width: 100%; touch-action: pan-y; border-radius: 16px; cursor: grab; }
+.carousel-viewport:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.5); outline-offset: 4px; }
+.carousel-track {
+  display: grid;
+  width: 100%;
+  perspective: 1000px;
+  perspective-origin: 50% 45%;
+  transform-style: preserve-3d;
+}
+.carousel-track > section {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(68%, 360px);
+  justify-self: center;
+  min-width: 0;
+  min-height: 350px;
+  padding: 10px 32px 12px;
+  justify-content: center;
+  transform: translate3d(var(--slide-x, 0%), var(--slide-y, 0px), var(--slide-z, 0px)) rotateY(var(--slide-angle, 0deg));
+  transform-origin: 50% 50%;
+  opacity: var(--slide-opacity, 0);
+  backface-visibility: hidden;
+  filter: blur(var(--slide-blur, 0px));
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 500ms ease, filter 600ms ease;
+  will-change: transform, opacity;
+}
+.carousel-track > .discord-profile { --slide-opacity: 1; }
+.profile-carousel.is-dragging .carousel-track > section { transition: none; }
+.profile-carousel.is-dragging .carousel-viewport { cursor: grabbing; user-select: none; }
+.carousel-nav button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.carousel-nav { display: flex; justify-content: center; gap: 2px; margin-top: 14px; }
+.carousel-nav button { display: grid; place-items: center; width: 44px; height: 32px; padding: 8px; border: 0; background: transparent; cursor: pointer; border-radius: 8px; }
+.carousel-nav button span { height: 3px; width: 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.22); transition: width 400ms ease, background-color 400ms ease; }
+.carousel-nav button[aria-pressed="true"] span { width: 26px; background: rgba(255, 255, 255, 0.85); }
+.social-profile { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.platform-avatar { display: grid; place-items: center; width: 96px; height: 96px; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.17); border-radius: 50%; background: linear-gradient(140deg, #242529, #101114); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25); }
+.platform-avatar img, .brand-icon { filter: invert(1); opacity: 0.85; }
+.platform-photo { overflow: hidden; }
+.platform-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; filter: none; opacity: 1; }
+.social-name { margin: 0; max-width: 100%; font-size: clamp(24px, 5vw, 34px); font-weight: 500; letter-spacing: -0.035em; overflow-wrap: anywhere; }
+.social-caption { margin: 0; color: rgba(255, 255, 255, 0.48); font-size: 12px; }
+.profile-link[aria-disabled="true"] { opacity: 0.4; cursor: default; pointer-events: none; }
+.brand-icon { flex: 0 0 18px; width: 18px; height: 18px; }
+@media (max-width: 480px) {
+  .carousel-track > section { width: 76%; padding-inline: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track > section, .carousel-nav button span { transition: none; }
+}
+
+.discord-profile {
+  --presence-color: #8d929b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.discord-profile[data-presence="online"] { --presence-color: #64d99b; }
+.discord-profile[data-presence="idle"] { --presence-color: #efc66c; }
+.discord-profile[data-presence="dnd"] { --presence-color: #ef7b88; }
+.discord-profile[data-presence="offline"] { --presence-color: #9399a3; }
+.profile-eyebrow {
+  margin: 0 0 26px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+}
+.profile-avatar-wrap { position: relative; width: 96px; height: 96px; margin-bottom: 20px; }
+.profile-avatar-placeholder,
+.profile-avatar {
+  position: absolute;
+  inset: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: #18191d;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+.profile-avatar { object-fit: cover; }
+.profile-avatar[hidden], .profile-link[hidden] { display: none; }
+.profile-avatar-placeholder { display: grid; place-items: center; color: #888d97; }
+.profile-avatar-placeholder svg { width: 44px; height: 44px; }
+.profile-avatar-dot {
+  position: absolute;
+  right: 1px;
+  bottom: 3px;
+  width: 18px;
+  height: 18px;
+  border: 4px solid #191a1e;
+  border-radius: 50%;
+  background: var(--presence-color);
+  transition: background-color 400ms ease;
+}
+#profile-name { margin: 0; max-width: 100%; font-size: clamp(24px, 5vw, 34px); font-weight: 500; letter-spacing: -0.035em; overflow-wrap: anywhere; }
+.profile-username { margin: 7px 0 18px; color: rgba(255, 255, 255, 0.5); font-size: 13px; overflow-wrap: anywhere; }
+.profile-presence { display: flex; align-items: center; gap: 8px; margin: 0; color: #d2d4d9; font-size: 12px; }
+.profile-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--presence-color); }
+.profile-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; margin-top: 26px; padding: 12px 18px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 30px; color: #d9dbe1; font-size: 12px; text-decoration: none; white-space: nowrap; transition: background-color 200ms ease, border-color 200ms ease; }
+.profile-link span { margin-left: 12px; color: #8d929b; }
+.profile-link:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.35); }
+.profile-link:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}

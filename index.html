@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>เว็บไซต์ของฉัน</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="./js/music-curve.js" defer></script>
+    <script src="./js/audio.js" defer></script>
+    <script src="./js/background.js" defer></script>
+    <script src="./js/main.js" defer></script>
+    <script src="./js/profile.js" defer></script>
+    <script src="./js/social.js" defer></script>
+  </head>
+  <body>
+    <canvas id="letter-background" aria-hidden="true"></canvas>
+    <video
+      id="background-audio"
+      class="scene-video"
+      src="./Video/background-loop.mp4"
+      poster="./assets/images/video-poster.jpg"
+      loop playsinline muted preload="auto"
+      aria-hidden="true" tabindex="-1"
+    ></video>
+    <img class="scene-loop-bridge" src="./assets/images/video-poster.jpg" alt="" aria-hidden="true" />
+    <div class="scene-shade" aria-hidden="true"></div>
+    <aside class="music-control" aria-label="เพลงพื้นหลัง">
+      <button id="music-toggle" type="button" aria-pressed="false" aria-label="เปิดเพลง" title="เปิดเพลง">
+        <span class="music-meter" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span id="music-label" class="visually-hidden">เปิดเพลง</span>
+      </button>
+      <span id="music-status" class="visually-hidden" role="status"></span>
+    </aside>
+
+    <header>
+      <!-- เพิ่มส่วนหัวเว็บไซต์ที่นี่ -->
+    </header>
+
+    <main class="page-center">
+      <div class="glass-stage">
+        <div class="glass-panel">
+          <span class="glass-light" aria-hidden="true"></span>
+          <div class="profile-carousel" role="region" aria-roledescription="carousel" aria-label="โปรไฟล์โซเชียล">
+            <div class="carousel-viewport" tabindex="0" aria-label="เลื่อนซ้ายหรือขวาเพื่อเลือกโปรไฟล์">
+              <div class="carousel-track">
+                <section class="social-profile" data-platform="instagram" role="group" aria-roledescription="slide" aria-label="Instagram 1 จาก 3" aria-hidden="true" inert>
+                  <p class="profile-eyebrow">INSTAGRAM</p>
+                  <div class="platform-avatar platform-photo"><img src="./assets/images/instagram-avatar.jpg" alt="รูปโปรไฟล์ pxw_pxi_ บน Instagram" width="96" height="96" /></div>
+                  <h2 class="social-name" id="instagram-name">🐼</h2>
+                  <p class="profile-username" id="instagram-username">@pxw_pxi_</p>
+                  <p class="social-caption">Instagram</p>
+                  <a id="instagram-link" class="profile-link" href="https://www.instagram.com/pxw_pxi_/?hl=en" target="_blank" rel="noopener noreferrer"><img class="brand-icon" src="./assets/icons/instagram.svg" alt="" width="18" height="18" />ดูโปรไฟล์ <span aria-hidden="true">↗</span></a>
+                </section>
+          <section class="discord-profile" data-platform="discord" role="group" aria-roledescription="slide" aria-label="Discord 2 จาก 3" aria-labelledby="profile-name" data-presence="unknown">
+            <p class="profile-eyebrow">DISCORD PROFILE</p>
+            <div class="profile-avatar-wrap">
+              <div class="profile-avatar-placeholder" aria-hidden="true">
+                <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M9 40c0-9 6-14 15-14s15 5 15 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+              <img id="profile-avatar" class="profile-avatar" src="./assets/images/discord-avatar.webp" alt="รูปโปรไฟล์ pawpai_" width="96" height="96" />
+              <span class="profile-avatar-dot" aria-hidden="true"></span>
+            </div>
+            <h1 id="profile-name">𝕾𝖔𝖑𝖎𝖘 𖤓</h1>
+            <p id="profile-username" class="profile-username">@pawpai_</p>
+            <p class="profile-presence" role="status">
+              <span class="profile-status-dot" aria-hidden="true"></span>
+              <span id="profile-status">กำลังเชื่อมต่อ…</span>
+            </p>
+            <a id="profile-link" class="profile-link" href="https://discord.com/users/705415549454385192" target="_blank" rel="noopener noreferrer"><img class="brand-icon" src="./assets/icons/discord.svg" alt="" width="18" height="18" />ดูโปรไฟล์ <span aria-hidden="true">↗</span></a>
+          </section>
+                <section class="social-profile" data-platform="steam" role="group" aria-roledescription="slide" aria-label="Steam 3 จาก 3" aria-hidden="true" inert>
+                  <p class="profile-eyebrow">STEAM</p>
+                  <div class="platform-avatar platform-photo"><img src="./assets/images/steam-avatar.jpg" alt="รูปโปรไฟล์ gg บน Steam" width="96" height="96" /></div>
+                  <h2 class="social-name" id="steam-name">gg</h2>
+                  <p class="profile-username" id="steam-username">76561198283913394</p>
+                  <p class="social-caption">Steam Community</p>
+                  <a id="steam-link" class="profile-link" href="https://steamcommunity.com/profiles/76561198283913394/" target="_blank" rel="noopener noreferrer"><img class="brand-icon" src="./assets/icons/steam.svg" alt="" width="18" height="18" />ดูโปรไฟล์ <span aria-hidden="true">↗</span></a>
+                </section>
+              </div>
+            </div>
+            <nav class="carousel-nav" aria-label="เลือกโปรไฟล์">
+              <button type="button" data-slide="0" aria-label="Instagram" aria-pressed="false"><span></span></button>
+              <button type="button" data-slide="1" aria-label="Discord" aria-pressed="true"><span></span></button>
+              <button type="button" data-slide="2" aria-label="Steam" aria-pressed="false"><span></span></button>
+            </nav>
+            <p class="visually-hidden" id="carousel-announcement" aria-live="polite" aria-atomic="true"></p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <!-- เพิ่มส่วนท้ายเว็บไซต์ที่นี่ -->
+    </footer>
+  </body>
+</html>
