@@ -72,15 +72,15 @@ const socialProfiles = {
   });
   viewport.addEventListener("pointerdown", event => {
     blockClick = false;
-    if (event.button !== 0 || !event.isPrimary || event.target.closest("a,button,input")) return;
-    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, offset: 0, horizontal: false };
+    if (event.button !== 0 || !event.isPrimary) return;
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, offset: 0, horizontal: false, startedAt: event.timeStamp };
   });
   viewport.addEventListener("pointermove", event => {
     if (!drag || drag.id !== event.pointerId) return;
     const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
     if (!drag.horizontal) {
-      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) { drag = null; return; }
-      if (Math.abs(dx) < 8) return;
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 7) { drag = null; return; }
+      if (Math.abs(dx) < 7) return;
       drag.horizontal = true;
       viewport.setPointerCapture(event.pointerId);
       carousel.classList.add("is-dragging");
@@ -93,19 +93,23 @@ const socialProfiles = {
   });
   function finish(event, cancel = false) {
     if (!drag || drag.id !== event.pointerId) return;
-    const offset = drag.offset;
+    const offset = event.clientX - drag.x;
     const horizontal = drag.horizontal;
-    const threshold = Math.min(70, viewport.clientWidth * 0.18);
+    const elapsed = Math.max(1, event.timeStamp - drag.startedAt);
+    const threshold = Math.min(54, Math.max(32, viewport.clientWidth * 0.12));
+    const quickSwipe = horizontal && Math.abs(offset) >= 24 && elapsed <= 360 && Math.abs(offset) / elapsed >= 0.55;
     drag = null;
     carousel.classList.remove("is-dragging");
     if (viewport.hasPointerCapture(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
-    let direction = !cancel && Math.abs(offset) > threshold ? (offset < 0 ? 1 : -1) : 0;
+    let direction = !cancel && (Math.abs(offset) > threshold || quickSwipe) ? (offset < 0 ? 1 : -1) : 0;
     if (!cancel && !horizontal) {
       const bounds = viewport.getBoundingClientRect();
       const position = (event.clientX - bounds.left) / bounds.width;
       if (position < 0.25) direction = -1;
       else if (position > 0.75) direction = 1;
     }
+    if (cancel) blockClick = false;
+    else if (horizontal) setTimeout(() => { blockClick = false; }, 500);
     show(index + direction);
   }
   viewport.addEventListener("pointerup", event => finish(event));

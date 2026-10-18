@@ -257,7 +257,7 @@ body {
 }
 
 .profile-carousel { position: relative; width: 100%; }
-.carousel-viewport { overflow: hidden; width: 100%; touch-action: pan-y; border-radius: 16px; cursor: grab; }
+.carousel-viewport { overflow: hidden; width: 100%; touch-action: pan-y pinch-zoom; overscroll-behavior-x: contain; border-radius: 16px; cursor: grab; -webkit-tap-highlight-color: transparent; }
 .carousel-viewport:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.5); outline-offset: 4px; }
 .carousel-track {
   display: grid;
