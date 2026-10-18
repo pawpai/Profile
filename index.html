@@ -3,8 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>เว็บไซต์ของฉัน</title>
+    <title>𝕾𝖔𝖑𝖎𝖘 𖤓</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/coffee-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/coffee-64.png" />
     <link rel="stylesheet" href="./css/style.css" />
+    <script src="./js/entry.js" defer></script>
     <script src="./js/music-curve.js" defer></script>
     <script src="./js/audio.js" defer></script>
     <script src="./js/background.js" defer></script>
@@ -12,8 +15,11 @@
     <script src="./js/profile.js" defer></script>
     <script src="./js/social.js" defer></script>
   </head>
-  <body>
-    <canvas id="letter-background" aria-hidden="true"></canvas>
+  <body class="is-locked">
+    <button class="entry-screen" id="entry-screen" type="button" aria-label="click here เพื่อเข้าสู่เว็บไซต์และเริ่มวิดีโอพร้อมเสียง">
+      <span>click here</span>
+    </button>
+    <canvas id="letter-background" aria-hidden="true" hidden></canvas>
     <video
       id="background-audio"
       class="scene-video"
@@ -24,7 +30,7 @@
     ></video>
     <img class="scene-loop-bridge" src="./assets/images/video-poster.jpg" alt="" aria-hidden="true" />
     <div class="scene-shade" aria-hidden="true"></div>
-    <aside class="music-control" aria-label="เพลงพื้นหลัง">
+    <aside class="music-control" aria-label="เพลงพื้นหลัง" hidden inert>
       <button id="music-toggle" type="button" aria-pressed="false" aria-label="เปิดเพลง" title="เปิดเพลง">
         <span class="music-meter" aria-hidden="true"><i></i><i></i><i></i></span>
         <span id="music-label" class="visually-hidden">เปิดเพลง</span>
@@ -36,7 +42,7 @@
       <!-- เพิ่มส่วนหัวเว็บไซต์ที่นี่ -->
     </header>
 
-    <main class="page-center">
+    <main class="page-center" hidden inert>
       <div class="glass-stage">
         <div class="glass-panel">
           <span class="glass-light" aria-hidden="true"></span>

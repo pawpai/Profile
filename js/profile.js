@@ -47,6 +47,7 @@ const discordUserId = "705415549454385192";
       const user = data.discord_user;
       if (user.id !== discordUserId) throw new Error("Unexpected account");
       name.textContent = user.global_name || user.display_name || user.username || "Discord profile";
+      document.title = name.textContent;
       username.textContent = user.username ? `@${user.username}` : "Discord";
       if (avatarKey !== user.avatar) {
         avatarKey = user.avatar;

@@ -69,7 +69,7 @@
     },
   };
   async function startPlayback() {
-    if (backgrounded || document.hidden) return;
+    if (!window.siteEntered || backgrounded || document.hidden) return;
     const id = ++attempt;
     status.textContent = "";
     media.muted = !wantedSound;
@@ -102,7 +102,7 @@
     }
   });
   function unlock(event) {
-    if (!wantedSound || soundPlaying() || backgrounded || document.hidden
+    if (!window.siteEntered || !wantedSound || soundPlaying() || backgrounded || document.hidden
       || event.target?.closest?.(".music-control")) return;
     if (event.type === "keydown" && (event.repeat || !["Enter", " "].includes(event.key))) return;
     if (event.type === "pointerdown" && event.button !== 0) return;
@@ -111,7 +111,7 @@
   document.addEventListener("pointerdown", unlock, { passive: true });
   document.addEventListener("keydown", unlock);
   media.addEventListener("play", () => {
-    if (backgrounded || document.hidden) media.pause();
+    if (!window.siteEntered || backgrounded || document.hidden) media.pause();
     cancelLoopBlend();
     if (!media.paused) animateLoopBlend();
     updateButton();
@@ -138,5 +138,6 @@
   document.addEventListener("visibilitychange", () => setForeground(!document.hidden));
   window.addEventListener("pagehide", () => setForeground(false));
   window.addEventListener("pageshow", () => setForeground(!document.hidden));
-  void startPlayback();
+  window.addEventListener("site:enter", () => { void startPlayback(); });
+  media.pause();
 })();

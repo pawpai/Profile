@@ -136,6 +136,7 @@
   }
 
   function animate(time) {
+    if (!window.siteEntered || document.hidden) return;
     draw(last ? Math.min((time - last) / 1000, 0.05) : 0);
     last = time;
     frame = requestAnimationFrame(animate);
@@ -143,7 +144,7 @@
   function restart() {
     cancelAnimationFrame(frame);
     last = 0;
-    if (document.hidden) return;
+    if (!window.siteEntered || document.hidden) return;
     if (reduced.matches) draw(0);
     else frame = requestAnimationFrame(animate);
   }
@@ -159,6 +160,7 @@
     restart();
   }
   window.addEventListener("pointermove", event => {
+    if (!window.siteEntered) return;
     mouse.active = event.pointerType !== "touch" && !reduced.matches;
     mouse.x = event.clientX;
     mouse.y = event.clientY;
@@ -168,6 +170,7 @@
   window.addEventListener("pointercancel", clearMouse);
   window.addEventListener("blur", clearMouse);
   window.addEventListener("pointerdown", event => {
+    if (!window.siteEntered) return;
     if (event.target?.closest?.(".music-control")) return;
     if (reduced.matches || document.hidden || event.button !== 0) return;
     const now = performance.now();
@@ -189,6 +192,7 @@
     }
   }, { passive: true });
   window.addEventListener("resize", resize);
+  window.addEventListener("site:enter", restart);
   document.addEventListener("visibilitychange", restart);
   reduced.addEventListener("change", () => {
     clearMouse();
